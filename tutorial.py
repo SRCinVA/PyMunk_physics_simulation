@@ -11,11 +11,13 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))  # this sets up the window to 
 def draw(space, window, draw_options): # to manually draw the items in the space
     window.fill("white") # clear the window by filling out the entire screen
     space.debug_draw(draw_options)
+    pygame.display.update()
 
 def run(window, width, height):
     run = True
-    clock = pygame.time.Clock  # dictates the speed at which the simulation runs
+    clock = pygame.time.Clock() # dictates the speed at which the simulation runs
     fps = 60 # frames per second
+    dt = 1 / fps # "delta time," this is so that you sync up the clock with how frequently the simulation runs
 
     # for pymunk, you need to create a space
     space = pymunk.Space()  # this is where we put all our objects
@@ -28,8 +30,8 @@ def run(window, width, height):
             if event.type == pygame.QUIT:  # these enables us to turn the sim off by breaking out of the for loop
                 run = False
                 break
-        draw(window, space, draw_options) # need to call draw() here
-        space.step() # how fast you run the sim
+        draw(space, window, draw_options) # need to call draw() here
+        space.step(dt) # how fast you run the sim
         clock.tick(fps) # regulates the speed
 
     pygame.quit() # if we fall out of the while loop above, we will (obviously) want to quit.
