@@ -13,6 +13,15 @@ def draw(space, window, draw_options): # to manually draw the items in the space
     space.debug_draw(draw_options)
     pygame.display.update()
 
+def create_ball(space, radius, mass):
+    body = pymunk.Body()
+    body.position = (300,300)
+    shape = pymunk.Circle(body, radius)
+    shape.mass = mass
+    shape.color = (255, 0, 0, 100)  # rgb color plus opacity measure
+    space.add(body, shape) # thsi actually adds teh shape to the sim
+    return shape
+
 def run(window, width, height):
     run = True
     clock = pygame.time.Clock() # dictates the speed at which the simulation runs
@@ -22,6 +31,8 @@ def run(window, width, height):
     # for pymunk, you need to create a space
     space = pymunk.Space()  # this is where we put all our objects
     space.gravity = (0, 981) # gravity for both x and y direction
+
+    ball = create_ball(space, 30, 10)
 
     draw_options = pymunk.pygame_util.DrawOptions(window) # we pass in the pygame window as a surface to draw on
 
