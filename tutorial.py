@@ -22,6 +22,15 @@ def create_ball(space, radius, mass):
     space.add(body, shape) # thsi actually adds teh shape to the sim
     return shape
 
+def create_boundaries(space, width, height):
+    rects = [ # here we define the rectangles we'll draw onto the screen
+            # x and y position of the (a) center of the rectangle and (b) the width and height
+            [(width/2, height - 10), (width, 20)],  # height - 10 so it's flush at the bottom of the screen
+            [(width/2, 10), (width, 20)] # don't understand why this is just 10
+            [(width/2, height - 10), (width, 20)],
+            [(width/2, 10), (width, 20)]
+    ]
+
 def run(window, width, height):
     run = True
     clock = pygame.time.Clock() # dictates the speed at which the simulation runs
