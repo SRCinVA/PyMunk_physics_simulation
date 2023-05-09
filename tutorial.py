@@ -19,6 +19,8 @@ def create_ball(space, radius, mass):
     body.position = (300,300)
     shape = pymunk.Circle(body, radius)
     shape.mass = mass
+    shape.elasticity = 0.9
+    shape.friction = 0.4
     shape.color = (255, 0, 0, 100)  # rgb color plus opacity measure
     space.add(body, shape) # thsi actually adds teh shape to the sim
     return shape
@@ -36,6 +38,8 @@ def create_boundaries(space, width, height):
         body = pymunk.Body(body_type=pymunk.Body.STATIC) # we want this to not move
         body.position = pos # after creating the body, then we need to posiiton it
         shape = pymunk.Poly.create_box(body, size)
+        shape.elasticity = 0.4  # for realism
+        shape.friction = 0.5 # coefficient of friction between the ball and anything that hits it.
         space.add(body, shape)
 
 def run(window, width, height):
@@ -58,6 +62,10 @@ def run(window, width, height):
             if event.type == pygame.QUIT:  # these enables us to turn the sim off by breaking out of the for loop
                 run = False
                 break
+
+            if event.type == pygame.MOUSEBUTTONDOWN:  # if we want to apply force to this object ...
+                ball.body.apply_impulse_at_local_point((10000, 0),(0,0))  # ... we'll apply it 10000 at the x direction and none in the Y direction at the center of the object
+
         draw(space, window, draw_options) # need to call draw() here
         space.step(dt) # how fast you run the sim
         clock.tick(fps) # regulates the speed
