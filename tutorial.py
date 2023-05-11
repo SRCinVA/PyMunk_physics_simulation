@@ -9,6 +9,12 @@ pygame.init()
 WIDTH, HEIGHT = 500, 400
 window = pygame.display.set_mode((WIDTH, HEIGHT))  # this sets up the window to view what is going on
 
+def calculate_distance(p1, p2):
+    return math.sqrt((p2[1] - p1[1])**2 + (p2[0] - p1[0])**2) # tuples of x and y positions (that's why there are indices) and we have to get the absolute distance between them
+    
+def calculate_angle(p1, p2): # gives us the angle in radions between those two points, assuming that point 2 is at 0,0
+    return math.atan2(p2[1] - p1[1], p2[0] - p1[0])
+
 def draw(space, window, draw_options): # to manually draw the items in the space
     window.fill("white") # clear the window by filling out the entire screen
     space.debug_draw(draw_options)
