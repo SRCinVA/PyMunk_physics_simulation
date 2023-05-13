@@ -15,13 +15,19 @@ def calculate_distance(p1, p2):
 def calculate_angle(p1, p2): # gives us the angle in radions between those two points, assuming that point 2 is at 0,0
     return math.atan2(p2[1] - p1[1], p2[0] - p1[0])
 
-def draw(space, window, draw_options): # to manually draw the items in the space
+def draw(space, window, draw_options, line): # to manually draw the items in the space
     window.fill("white") # clear the window by filling out the entire screen
+    
+    if line:  # if we have a line ...
+        pygame.draw.line(window, "black", line[0], line[1], 3) # then we'll put it on the window in black at thickness 3 with positions 1 and 2
+
     space.debug_draw(draw_options)
+    
+    
     pygame.display.update()
 
 def create_ball(space, radius, mass, pos):
-    body = pymunk.Body()
+    body = pymunk.Body(body_type=pymunk.Body.STATIC)
     body.position = pos
     shape = pymunk.Circle(body, radius)
     shape.mass = mass
@@ -67,6 +73,10 @@ def run(window, width, height):
     ball = None
 
     while run:
+        line = None  # this just initialized 'line'
+        if ball: # if the ball is on the screen ...
+            line = [pressed_pos, pygame.mouse.get_pos()]  # this is how we calculate the angle of how the ball will move
+        
         for event in pygame.event.get(): # this is for any and all pygame events
             if event.type == pygame.QUIT:  # these enables us to turn the sim off by breaking out of the for loop
                 run = False
@@ -77,13 +87,14 @@ def run(window, width, height):
                     pressed_pos = pygame.mouse.get_pos()
                     ball = create_ball(space, 30, 10, pressed_pos)
                 elif pressed_pos:
+                    ball.body.body_type = pymunk.body.DYNAMIC
                     ball.body.apply_impulse_at_local_point((10000, 0),(0,0))  # ... we'll apply it 10000 at the x direction and none in the Y direction at the center of the object
                     pressed_pos = None # you can move it once, then you can't 
                 else: # here, it will remove the ball
                     space.remove(ball, ball.body)
                     ball = None
 
-        draw(space, window, draw_options) # need to call draw() here
+        draw(space, window, draw_options, line) # need to call draw() here. Notice that we are passing 'line' here as well.
         space.step(dt) # how fast you run the sim
         clock.tick(fps) # regulates the speed
 
